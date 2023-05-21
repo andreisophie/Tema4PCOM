@@ -3,23 +3,43 @@
 #include <unistd.h>     /* read, write, close */
 #include <string.h>     /* memcpy, memset */
 #include <sys/socket.h> /* socket, connect */
-#include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
+
 #include <netdb.h>      /* struct hostent, gethostbyname */
 #include <arpa/inet.h>
 #include "helpers.h"
 #include "requests.h"
-
-#define MAXSIZE 1024
-#define SERVERADDR "34.254.242.81"
+#include "commands.h"
+#include "parson.h"
 
 int main(int argc, char *argv[])
 {
-    char *message;
-    char *response;
-    int sockfd;
+    char command[LINELEN];
 
-    sockfd = open_connection(SERVERADDR, 8080, AF_INET, SOCK_STREAM, 0);
-        
+    while (1) {
+        scanf("%s", command);
+        if (!strncmp(command, REGISTER, 9)) {
+            register_user();
+        } else if (!strncmp(command, LOGIN, 6)) {
+            login_user();
+        } else if (!strncmp(command, ENTER_LIBRARY, 14)) {
+            enter_library();
+        } else if (!strncmp(command, GET_BOOKS, 10)) {
+            get_books();
+        } else if (!strncmp(command, GET_BOOK, 9)) {
+            get_book();
+        } else if (!strncmp(command, ADD_BOOK, 10)) {
+            add_book();
+        } else if (!strncmp(command, DELETE_BOOK, 12)) {
+            delete_book();
+        } else if (!strncmp(command, LOGOUT, 7)) {
+            logout();
+        } else if (!strncmp(command, EXIT, 5)) {
+            break;
+        } else {
+            printf("Unknown command\n");
+        }
+    }
+    
     // Ex 1.1: GET dummy from main server
     // message = compute_get_request(SERVERADDR, "/api/v1/dummy", NULL, NULL, 0);
     // send_to_server(sockfd, message);
@@ -55,21 +75,22 @@ int main(int argc, char *argv[])
     // response = receive_from_server(sockfd);
     // printf("%s\n", response);
     // Ex 5: POST weather data for verification to main server
-    char *cookies_buf[MAXSIZE] = {"connect.sid=s%3Ap_uRlAL7yp5ger44sHiZm9vWAge17Hjj.2rWEQFygb7%2F6L7UR8LkrxJ864LeyJcX9NhfCMlqAynw"};
+    // char *cookies_buf[MAXSIZE] = {"connect.sid=s%3Ap_uRlAL7yp5ger44sHiZm9vWAge17Hjj.2rWEQFygb7%2F6L7UR8LkrxJ864LeyJcX9NhfCMlqAynw"};
     // message = compute_post_request(SERVERADDR, "/api/v1/weather/44.7398/22.2767", "application/x-www-form-urlencoded", NULL, 0, cookies_buf, 1);
     // printf("%s\n\n", message);
     // send_to_server(sockfd, message);
     // response = receive_from_server(sockfd);
     // printf("%s\n", response);
     // Ex 6: Logout from main server
-    message = compute_get_request(SERVERADDR, "/api/v1/auth/logout", NULL, cookies_buf, 1);
-    printf("%s\n\n", message);
-    send_to_server(sockfd, message);
-    response = receive_from_server(sockfd);
-    printf("%s\n", response);
+    // message = compute_get_request(SERVERADDR, "/api/v1/auth/logout", NULL, cookies_buf, 1);
+    // printf("%s\n\n", message);
+    // send_to_server(sockfd, message);
+    // response = receive_from_server(sockfd);
+    // printf("%s\n", response);
     // BONUS: make the main server return "Already logged in!"
 
     // free the allocated data at the end!
+    free_resources();
 
     return 0;
 }
