@@ -109,12 +109,10 @@ void login_user() {
     char *serialized_string = json_serialize_to_string(user_value);
 
     message = compute_post_request(SERVERADDR, "/api/v1/tema/auth/login", "application/json", NULL, serialized_string, NULL, 0);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
     JSON_Value *json_response = json_parse_string(json_str_response);
@@ -133,7 +131,6 @@ void login_user() {
             free(token);
             token = NULL;
         }
-        // printf("%s\n", connect_cookie);
         break;
     case 400:
         printf("%d - %s\n", res_code, json_object_get_string(json_object(json_response), "error"));
@@ -157,12 +154,10 @@ void enter_library() {
     }
     char *message = compute_get_request(SERVERADDR, "/api/v1/tema/library/access", NULL, NULL, &connect_cookie, 1);
     char *response;
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
     JSON_Value *json_response = json_parse_string(json_str_response);
@@ -176,7 +171,6 @@ void enter_library() {
         token = calloc(TOKEN_LEN + 1, sizeof(char));
         strcpy(token, "Bearer ");
         strcat(token, json_object_get_string(json_object(json_response), "token"));
-        // printf("%s\n", token);
         break;
     case 401:
         printf("%d - %s\n", res_code, json_object_get_string(json_object(json_response), "error"));
@@ -199,16 +193,13 @@ void get_books() {
 
     char *message = NULL, *response = NULL;
     message = compute_get_request(SERVERADDR, "/api/v1/tema/library/books", NULL, token, &connect_cookie, 1);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
 
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
-    // printf("%s\n", json_str_response);
     JSON_Value *json_response = json_parse_string(json_str_response);
 
     switch (res_code) {
@@ -251,16 +242,13 @@ void get_book() {
 
     char *message = NULL, *response = NULL;
     message = compute_get_request(SERVERADDR, path, NULL, token, &connect_cookie, 1);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
 
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
-    // printf("%s\n", json_str_response);
     JSON_Value *json_response = json_parse_string(json_str_response);
 
     switch (res_code) {
@@ -322,12 +310,10 @@ void add_book() {
     char *serialized_string = json_serialize_to_string(book_value);
 
     message = compute_post_request(SERVERADDR, "/api/v1/tema/library/books", "application/json", token, serialized_string, &connect_cookie, 1);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
 
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
@@ -365,12 +351,10 @@ void delete_book() {
 
     char *message = NULL, *response = NULL;
     message = compute_delete_request(SERVERADDR, path, "application/json", token, &connect_cookie, 1);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
 
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
@@ -402,12 +386,10 @@ void logout() {
 
     char *message = NULL, *response = NULL;
     message = compute_get_request(SERVERADDR, "/api/v1/tema/auth/logout", NULL, NULL, &connect_cookie, 1);
-    // printf("%s\n", message);
     int sockfd = open_connection(SERVERADDR, PORT, AF_INET, SOCK_STREAM, 0);
     send_to_server(sockfd, message);
     response = receive_from_server(sockfd);
     close_connection(sockfd);
-    // printf("%s\n", response);
 
     int res_code = get_res_code(response);
     char *json_str_response = basic_extract_json_response(response);
