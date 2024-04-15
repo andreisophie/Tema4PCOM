@@ -11,7 +11,7 @@ In functie de comanda primita de client, acesta fie o va executa, trimitand o ce
 - Comanda de `login` va fi executata mereu; clientul va cere utilizatorului sa introduca nume de utilizator si parola, iar in functie de raspunsul primit de la server, va afisa un mesaj de succes (caz in care va salva cookie-ul de conectare) sau un mesaj de eroare
 - Orice alta comanda poate sa esueze daca utilizatorul nu are permisiuni suficiente; spre exemplu:
     - daca utilizatorul incearca sa execute `enter_library` fara sa fi dat `login` in prealabil, clientul va afisa un mesaj de eroare si nici macar nu va mai trimite cerere catre server (fiind o certitudine ca va primi o eroare de tipul "user is not logged in").
-    - daca utilizatorul incearca sa execute orice comanda legata de biblioteca (alta decat `enter_library`) fara sa fi dat `enter_library` in prealabil, clientul va afisa un mesaj de eroare si nu va trimite nicio cerere catre server, pe acelasi fundament ca si mai sus
+    - daca utilizatorul incearca sa execute orice comanda legata de biblioteca (alta decat `enter_library`) fara sa fi dat `enter_library` in prealabil, clientul va afisa un mesaj de eroare si nu va trimite nicio cerere catre server, pe acelasi fundament ca mai sus
 
 ## Stocarea cookie-urilor si token-ului
 
